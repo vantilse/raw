@@ -1,7 +1,7 @@
 {% load static %}
 <style>
     .btn-search:hover .bi-search {
-        color: #0d6efd; /* Цвет при наведении */
+        color: #0d6efd;
     }
     .input-group-sm > .form-control,
     .input-group-sm > .btn {
@@ -47,7 +47,6 @@
 
     <!-- Правая часть -->
     <div class="d-flex align-items-center gap-3">
-      <!-- Поиск -->
       <form class="d-flex" method="get" action="{% url 'search' %}">
           <input type="search"
                  class="form-control form-control-sm"
@@ -60,7 +59,6 @@
             </button>
       </form>
 
-      <!-- Профиль/Авторизация -->
       {% if user.is_authenticated %}
       <div class="dropdown">
         <a href="#"
