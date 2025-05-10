@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{% static 'rawApp/css/auth.css' %}">
 
 <style>
-    /* Добавьте в CSS */
     .invalid-feedback {
         display: none;
         color: #dc3545;
@@ -108,7 +107,6 @@
 </div>
 
 <script>
-    // Валидация email в реальном времени
     const emailField = document.getElementById('email');
     const emailError = document.getElementById('emailError');
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -125,7 +123,6 @@
         }
     });
 
-    // Валидация при отправке формы
     document.getElementById('registrationForm').addEventListener('submit', function(e) {
         if (!emailRegex.test(emailField.value)) {
             e.preventDefault();
@@ -135,7 +132,6 @@
         }
     });
 
-    // Существующий скрипт для отображения паролей
     document.getElementById('showPasswords').addEventListener('change', function(e) {
         const password1 = document.getElementById('password1');
         const password2 = document.getElementById('password2');
