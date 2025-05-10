@@ -37,14 +37,12 @@
 </style>
 
 <div class="settings-container">
-    <!-- Основные настройки -->
     <div class="settings-card">
         <h2 class="section-title">
             <i class="bi bi-gear me-2"></i>
             Настройки аккаунта
         </h2>
 
-        <!-- Форма изменения данных -->
         <form method="post">
             {% csrf_token %}
             <input type="hidden" name="update_info" value="1">
@@ -66,7 +64,6 @@
         </form>
     </div>
 
-    <!-- Смена пароля -->
     <div class="settings-card">
         <h3 class="section-title">
             <i class="bi bi-shield-lock me-2"></i>
@@ -99,7 +96,6 @@
         </form>
     </div>
 
-    <!-- Опасная зона -->
     <div class="danger-zone">
         <h3 class="section-title text-danger">
             <i class="bi bi-exclamation-octagon me-2"></i>
@@ -126,7 +122,6 @@
     </div>
 </div>
 
-<!-- Модальное окно подтверждения удаления -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
