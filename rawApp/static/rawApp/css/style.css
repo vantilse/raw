@@ -1,5 +1,3 @@
-/* УДАЛЕНО ВСЁ, ЧТО СВЯЗАНО С ФОРМОЙ ВХОДА */
-
 .card {
     transition: transform 0.3s ease;
     border-radius: 15px;
@@ -30,7 +28,6 @@
     border-radius: 50%;
 }
 
-/* Фиксированный подвал */
 body {
     display: flex;
     flex-direction: column;
@@ -41,7 +38,6 @@ main {
     flex: 1;
 }
 
-/* Адаптивные карточки */
 .card-img-top {
     transition: transform 0.3s ease;
 }
@@ -50,7 +46,6 @@ main {
     transform: scale(1.05);
 }
 
-/* Категории */
 .btn-category {
     transition: all 0.3s ease;
     white-space: nowrap;
@@ -63,7 +58,6 @@ main {
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* Заголовки секций */
 .section-title {
     position: relative;
     padding-bottom: 0.5rem;
@@ -88,8 +82,8 @@ footer a, footer .bi {
 }
 
 .carousel-caption {
-    bottom: 20%;  /* Смещение от низа карусели */
-    transform: translateY(0);  /* Отключение вертикального центрирования */
+    bottom: 20%; 
+    transform: translateY(0); 
 }
 
 .btn-outline-dark:hover i {
@@ -98,7 +92,7 @@ footer a, footer .bi {
 }
 
 .bi-arrow-right-short {
-    font-size: 40px !important;  /* Полный контроль размера */
+    font-size: 40px !important; 
 }
 
 .section-link .bi {
