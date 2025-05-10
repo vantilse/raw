@@ -17,7 +17,6 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
-                        <!-- Поле даты рождения -->
                         <div class="mb-4">
                             <label for="birth_date" class="form-label text-dark">Дата рождения</label>
                             <input type="date"
@@ -32,7 +31,6 @@
                             </div>
                         </div>
 
-                        <!-- Поле биографии -->
                         <div class="mb-4">
                             <label for="bio" class="form-label text-dark">Биография</label>
                             <textarea class="form-control form-control-lg"
@@ -45,7 +43,6 @@
                             </div>
                         </div>
 
-                        <!-- Поле аватара -->
                         <div class="mb-4">
                             <label for="avatar" class="form-label text-dark">Аватар</label>
                             <input type="file"
@@ -73,12 +70,10 @@
     </div>
 </div>
 
-<!-- Дополнительный скрипт для валидации даты -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const dateField = document.getElementById('birth_date');
 
-    // Проверка формата при вводе
     dateField.addEventListener('input', function(e) {
         const pattern = /^\d{4}-\d{2}-\d{2}$/;
         if (!pattern.test(e.target.value)) {
