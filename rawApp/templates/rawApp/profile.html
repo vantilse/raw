@@ -64,7 +64,7 @@
 
 <div class="profile-wrapper">
     <div class="row g-4">
-        <!-- Левая колонка с аватаром -->
+        <!-- Левая колонка -->
         <div class="col-md-4">
             <div class="d-flex flex-column align-items-center">
                 <img src="{% if profile.avatar %}{{ profile.avatar.url }}{% else %}{% static 'images/default_user.png' %}{% endif %}"
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <!-- Правая колонка с информацией -->
+        <!-- Правая колонка -->
         <div class="col-md-8">
             <div class="profile-info-section">
                 <h1 class="username-header">
@@ -105,7 +105,7 @@
             </div>
 
         </div>
-        <!-- Секция с работами -->
+
             <section class="mt-5">
                 <h3 class="mb-4 d-flex align-items-center gap-2">
                     Созданные работы
