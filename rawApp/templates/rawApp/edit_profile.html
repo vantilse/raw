@@ -1,0 +1,236 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<style>
+    .profile-wrapper {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    .avatar-square {
+        width: 250px;
+        height: 250px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 3px solid #dee2e6;
+    }
+    .form-section {
+        background: #fff;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+    .form-header {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #212529;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 0.5rem;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+    }
+    .form-control-custom {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+    }
+    .btn-save {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+    }
+    .name-fields {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    .delete-avatar-btn {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .avatar-upload-section {
+        margin-bottom: 1.5rem;
+    }
+    .confirmation-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+    }
+    .confirmation-dialog {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+</style>
+
+<div class="profile-wrapper">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="delete_avatar_flag" name="delete_avatar" value="">
+
+        <div class="row g-4">
+            <!-- Левая колонка с аватаром -->
+            <div class="col-md-4">
+                <div class="d-flex flex-column align-items-center">
+                     <div class="avatar-upload-section text-center w-100">
+                            {% if form.instance.avatar %}
+                                <img src="{{ form.instance.avatar.url }}"
+                                     class="avatar-square mb-3"
+                                     alt="Текущий аватар"
+                                     id="avatar-preview">
+                            {% else %}
+                                <img src="{% static 'images/default_user.png' %}"
+                                     class="avatar-square mb-3"
+                                     alt="Текущий аватар"
+                                     id="avatar-preview">
+                            {% endif %}
+                        </div>
+
+                        <!-- Поле загрузки файла -->
+                        <div class="input-group w-100 mb-3">
+                            <label class="form-label w-100">
+                                Новый аватар
+                                <input type="file"
+                                       class="form-control form-control-custom mt-2"
+                                       id="id_avatar"
+                                       name="avatar"
+                                       accept="image/*">
+                            </label>
+                        </div>
+
+                        <!-- Кнопка удаления -->
+                        {% if form.instance.avatar %}
+                        <button type="button"
+                                class="btn btn-outline-danger delete-avatar-btn"
+                                onclick="showConfirmation()">
+                            Удалить текущий аватар
+                        </button>
+                        {% endif %}
+                </div>
+            </div>
+
+            <!-- Правая колонка с формой -->
+            <div class="col-md-8">
+                <div class="form-section">
+                    <h1 class="form-header">Редактирование профиля</h1>
+
+                    <!-- Имя и Фамилия -->
+                    <div class="name-fields mb-4">
+                        <div>
+                            <label for="id_first_name" class="form-label">Имя</label>
+                            <input type="text"
+                                   class="form-control form-control-custom"
+                                   id="id_first_name"
+                                   name="first_name"
+                                   value="{{ user.first_name }}">
+                        </div>
+                        <div>
+                            <label for="id_last_name" class="form-label">
+                                Фамилия
+                                <small class="text-muted ms-2">(Необязательно)</small>
+                            </label>
+                            <input type="text"
+                                   class="form-control form-control-custom"
+                                   id="id_last_name"
+                                   name="last_name"
+                                   value="{{ user.last_name }}">
+                        </div>
+                    </div>
+
+                    <!-- Поле "О себе" -->
+                    <div class="mb-4">
+                        <label for="id_bio" class="form-label">О себе</label>
+                        {{ form.bio }}
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-dark btn-save">
+                            <i class="bi bi-save me-2"></i>
+                            Сохранить изменения
+                        </button>
+                        <a href="{% url 'profile' %}" class="btn btn-outline-dark btn-save">
+                            Отмена
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="confirmation-modal" id="confirmationModal">
+    <div class="confirmation-dialog">
+        <h5>Вы уверены, что хотите удалить аватар?</h5>
+        <div class="mt-4">
+            <button type="button"
+                    class="btn btn-danger"
+                    onclick="confirmDelete()">
+                Да, удалить
+            </button>
+            <button type="button"
+                    class="btn btn-secondary"
+                    onclick="hideConfirmation()">
+                Отмена
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+      // Скрипт для предпросмотра аватара
+    document.getElementById('id_avatar').addEventListener('change', function(e) {
+        const preview = document.getElementById('avatar-preview');
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Функции для работы с модальным окном
+    function showConfirmation() {
+        document.getElementById('confirmationModal').style.display = 'block';
+    }
+
+    function hideConfirmation() {
+        document.getElementById('confirmationModal').style.display = 'none';
+    }
+
+    function confirmDelete() {
+        // Устанавливаем флаг удаления
+        document.getElementById('delete_avatar_flag').value = 'true';
+
+        // Меняем превью на дефолтное
+        const preview = document.getElementById('avatar-preview');
+        preview.src = "{% static 'images/default_user.png' %}";
+
+        // Скрываем кнопку удаления
+        document.querySelector('.delete-avatar-btn').style.display = 'none';
+
+        hideConfirmation();
+    }
+</script>
+
+{% endblock %}

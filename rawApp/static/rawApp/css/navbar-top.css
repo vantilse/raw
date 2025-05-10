@@ -1,0 +1,16 @@
+/* Show it's not fixed to the top */
+body {
+  min-height: 75rem;
+}
+.navbar-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.navbar-avatar:hover {
+    border-color: #adb5bd;
+    transform: scale(1.05);
+}

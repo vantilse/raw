@@ -1,0 +1,180 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+<style>
+    .artwork-detail-wrapper {
+        max-width: 120%;
+        margin: 2rem auto;
+        display: flex;
+        justify-content: center;
+    }
+    .image-section {
+        display: flex;
+        width: 100%;
+        max-width: 1600px;
+    }
+    .main-image-container {
+        width: 75%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+    .main-image {
+        width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+    }
+    .info-section {
+        width: 25%;
+        padding: 2rem;
+        background: #fff;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+    }
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+    }
+    @media (max-width: 768px) {
+        .artwork-detail-wrapper {
+            max-width: 95%;
+            flex-direction: column;
+        }
+        .main-image-container,
+        .info-section {
+            width: 100%;
+        }
+        .main-image {
+            max-height: 60vh;
+        }
+        .info-section {
+            box-shadow: none;
+            padding: 1rem;
+        }
+    }
+
+    .btn-like {
+        border: none;
+        background: none;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+
+    .like-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .like-icon {
+        font-size: 1.2rem; /* Уменьшенный размер иконки */
+        line-height: 1;
+    }
+
+    .like-count {
+        font-size: 0.9rem;
+        position: relative;
+        top: 1px; /* Тонкая настройка выравнивания */
+    }
+
+    .btn-like:hover {
+        color: #dc3545;
+        transform: scale(1.1);
+    }
+
+    .btn-like.liked {
+        color: #dc3545;
+    }
+</style>
+
+<div class="artwork-detail-wrapper">
+    <div class="image-section">
+        <!-- Левая колонка с изображением -->
+        <div class="main-image-container">
+            <img src="{{ artwork.image.url }}"
+                 class="main-image"
+                 alt="{{ artwork.title }}">
+        </div>
+
+        <!-- Правая колонка с информацией -->
+        <div class="info-section">
+            <h1 class="mb-4">{{ artwork.title }}</h1>
+
+            <div class="stats mb-4">
+
+                <form method="post" action="{% url 'toggle_like' artwork.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-like {% if is_liked %}liked{% endif %}">
+                        <div class="like-container">
+                            <i class="bi bi-heart-fill like-icon"></i>
+                            <span class="like-count">{{ artwork.likes.count }}</span>
+                        </div>
+                    </button>
+                </form>
+
+                <span class="badge bg-success">
+                    <i class="bi bi-eye-fill"></i>
+                    {{ artwork.views }}
+                </span>
+            </div>
+
+            <!-- Художник (artist) -->
+            <div class="artist-info mb-4">
+                <h4>Художник</h4>
+                {% if artwork.artist.user %}
+                    <a href="{% url 'profile' artwork.artist.user.id %}"
+                       class="btn btn-outline-dark mt-2">
+                        {{ artwork.artist.display_name }}
+                    </a>
+                {% else %}
+                    <span class="btn btn-outline-dark mt-2 disabled">
+                        {{ artwork.artist.display_name }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="description mb-4">
+                <h4>Описание</h4>
+                <p class="text-muted mt-2">
+                    {{ artwork.description|linebreaksbr }}
+                </p>
+            </div>
+
+            <div class="categories mb-4">
+                <h4>Категории</h4>
+                <div class="d-flex flex-wrap mt-2">
+                    {% for category in artwork.categories.all %}
+                    <span class="badge bg-dark me-1 mb-1">
+                        {{ category.name }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="meta-info">
+                <div class="row">
+                    <div class="col-12">
+                        <small class="text-muted">
+                            Автор публикации:
+                            <a href="{% url 'profile' artwork.author.id %}">
+                                {{ artwork.author.username }}
+                            </a>
+                        </small>
+                    </div>
+                    <div class="col-12 mt-1">
+                        <small class="text-muted">
+                            Опубликовано: {{ artwork.created_at|date:"d M Y H:i" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

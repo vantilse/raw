@@ -1,0 +1,16 @@
+{% extends 'rawApp/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Картины на модерации</h2>
+    <div class="list-group">
+        {% for artwork in artworks %}
+        <a href="{% url 'moderate_artwork' artwork.pk %}" class="list-group-item">
+            {{ artwork.title }} (автор: {{ artwork.author.username }})
+        </a>
+        {% empty %}
+        <div class="alert alert-info">Нет работ для модерации</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

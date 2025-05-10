@@ -1,0 +1,20 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Результаты поиска: "{{ query }}"</h2>
+
+    {% if results %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for artwork in results %}
+            {% include 'rawApp/_artwork_card.html' %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        Ничего не найдено по запросу "{{ query }}"
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div class="container-fluid py-6">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <strong>{{ field.label }}:</strong> {{ error }}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-dark text-white py-3">
+                    <h3 class="mb-0 text-center">Создать статью о картине</h3>
+                </div>
+
+                <div class="card-body px-5 py-4">
+                    <form method="post" enctype="multipart/form-data" id="artwork-form">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label text-dark">Загрузить изображение</label>
+                                    <div class="custom-file">
+                                        <input type="file"
+                                               class="form-control form-control-lg"
+                                               id="image"
+                                               name="image"
+                                               accept="image/*"
+                                               required>
+                                    </div>
+                                    <div class="form-text text-muted">
+                                        Поддерживаемые форматы: JPG, PNG (макс. 5MB)
+                                    </div>
+                                </div>
+
+                                <div class="preview-container mb-4 position-relative">
+                                    <img id="image-preview"
+                                         src="#"
+                                         alt="Предпросмотр изображения"
+                                         class="img-fluid rounded d-none">
+                                    <div id="preview-placeholder"
+                                         class="d-flex align-items-center justify-content-center
+                                                h-100 border rounded bg-light">
+                                        <div class="text-center text-muted">
+                                            <i class="bi bi-image fs-1"></i>
+                                            <p class="mt-2">Изображение появится здесь</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="title" class="form-label text-dark">Название картины</label>
+                                    <input type="text"
+                                           class="form-control form-control-lg"
+                                           id="title"
+                                           name="title"
+                                           required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label text-dark">Автор картины</label>
+                                    <div class="author-selector">
+                                        <input type="text"
+                                               class="form-control form-control-lg"
+                                               id="new-artist"
+                                               name="new_artist"
+                                               placeholder="Введите ФИО автора">
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="description" class="form-label text-dark">Описание</label>
+                                    <textarea class="form-control form-control-lg"
+                                              id="description"
+                                              name="description"
+                                              rows="4"
+                                              required></textarea>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label text-dark">Категории</label>
+
+                                    <div class="input-group mb-3">
+                                        <input type="text"
+                                               class="form-control form-control-lg"
+                                               id="new-categories-input"
+                                               placeholder="Введите категории через запятую">
+                                        <button type="button"
+                                                class="btn btn-outline-secondary"
+                                                id="add-categories">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                    <div class="selected-categories mt-2" id="selected-categories"></div>
+                                    <input type="hidden" name="new_categories" id="new-categories">
+                                    <small class="text-muted">Пример: пейзаж, портрет, абстракция</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-muted text-center mt-2">
+                            Каждую статью проверяет модерация перед публикацией
+                        </p>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg w-100 py-2" id="submit-btn">
+                                Отправить на модерацию
+                            </button>
+
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg w-100 py-2">
+                                Вернуться на главную
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container-fluid {
+        max-width: 1800px;
+        padding: 0 30px;
+    }
+    .card {
+        border-radius: 15px;
+    }
+    .form-control-lg {
+        font-size: 1.1rem;
+        padding: 1rem 1.2rem;
+    }
+    .preview-container {
+        height: 400px;
+    }
+    .selected-categories {
+        gap: 12px;
+    }
+    .category-item {
+        padding: 10px 25px;
+        font-size: 1.05rem;
+    }
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 0 15px;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+    }
+    .preview-container {
+        height: 300px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    #image-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #preview-placeholder {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    .selected-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .category-item {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 8px 20px;
+        border: 1px solid #dee2e6;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 3px;
+    }
+    .remove-category {
+        cursor: pointer;
+        color: #dc3545;
+        font-weight: bold;
+        line-height: 1;
+        margin-left: 8px;
+    }
+    .alert {
+        border-radius: 10px;
+    }
+    select[multiple] {
+        height: auto;
+    }
+</style>
+
+<script>
+    // Предпросмотр изображения
+    document.getElementById('image').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        const placeholder = document.getElementById('preview-placeholder');
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('d-none');
+                placeholder.classList.add('d-none');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "#";
+            preview.classList.add('d-none');
+            placeholder.classList.remove('d-none');
+        }
+    });
+
+    // Обработка категорий
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoriesInput = document.getElementById('new-categories-input');
+            const addCategoriesBtn = document.getElementById('add-categories');
+            const selectedCategories = document.getElementById('selected-categories');
+            const newCategoriesField = document.getElementById('new-categories');
+            const officialCategoriesSelect = document.getElementById('id_categories');
+            let categoriesList = [];
+
+            // Добавление новых категорий
+            addCategoriesBtn.addEventListener('click', function() {
+                const categories = categoriesInput.value.trim();
+                if (categories) {
+                    const newCategories = categories.split(',').map(c => c.trim()).filter(c => c);
+
+                    newCategories.forEach(cat => {
+                        if (!categoriesList.includes(cat)) {
+                            categoriesList.push(cat);
+
+                            const categoryItem = document.createElement('div');
+                            categoryItem.className = 'category-item';
+                            categoryItem.innerHTML = `
+                                ${cat}
+                                <span class="remove-category" data-category="${cat}">×</span>
+                            `;
+                            selectedCategories.appendChild(categoryItem);
+                        }
+                    });
+
+                    newCategoriesField.value = categoriesList.join(',');
+                    categoriesInput.value = '';
+                }
+            });
+
+            // Удаление категорий
+            selectedCategories.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-category')) {
+                    const category = e.target.getAttribute('data-category');
+                    categoriesList = categoriesList.filter(c => c !== category);
+                    newCategoriesField.value = categoriesList.join(',');
+                    e.target.parentElement.remove();
+                }
+            });
+
+            // Проверка формы перед отправкой
+            document.getElementById('artwork-form').addEventListener('submit', function(e) {
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Отправка...';
+
+                // Убедимся, что хотя бы одна категория выбрана
+                if (officialCategoriesSelect.selectedOptions.length === 0 && newCategoriesField.value.trim() === '') {
+                    e.preventDefault();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Отправить на модерацию';
+                    alert('Пожалуйста, выберите или добавьте хотя бы одну категорию');
+                }
+            });
+        });
+</script>
+{% endblock content %}

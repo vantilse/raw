@@ -1,0 +1,159 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    .section-link .bi {
+        font-size: 2rem;
+        margin-left: 0.5rem;
+    }
+    .btn-outline-dark .bi {
+        font-size: 1.5rem;
+        margin-left: 0.3rem;
+    }
+    .section-link:hover .bi {
+        transform: translateX(3px);
+        transition: transform 0.2s ease;
+    }
+    .custom-carousel {
+        height: 60vh;
+        margin-bottom: 2rem;
+    }
+    .carousel-item {
+        height: 60vh;
+    }
+    .carousel-item img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+    }
+    .carousel-caption {
+        bottom: 2%;
+        transform: translateY(0);
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 0.5rem;
+    }
+    @media (max-width: 768px) {
+        .carousel-caption {
+            bottom: 10%;
+            padding: 1rem;
+        }
+        .carousel-caption .display-4 {
+            font-size: 1.5rem;
+        }
+        .carousel-caption .lead {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div id="myCarousel" class="carousel slide custom-carousel" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{% static 'rawApp/images/zimniy_sad.jpg' %}" class="d-block w-100" alt="Slide 1">
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1 class="display-4 mb-3">Зимний сад</h1>
+                    <p class="lead mb-4">«Мир, в котором мы живем, — прекрасен. Прекрасно все: люди, громадная скульптура поверхности земли, ветер, трава, вода, смена времен года — все, все… Но самое прекрасное и загадочное — свет, который везде, и в нас тоже»</p>
+                    <a class="btn btn-dark btn-lg" href="artwork/3">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'rawApp/images/pokinutayaderevnya.jpg' %}" class="d-block w-100" alt="Slide 2">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1 class="display-4">Популярное</h1>
+                    <p class="lead">Нажми на кнопку для перехода в "Популярное"</p>
+                    <a class="btn btn-dark btn-lg" href="{% url 'popular' %}">Жмяк</a>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'rawApp/images/vechereet_1.jpg' %}" class="d-block w-100" alt="Slide 3">
+            <div class="container">
+                <div class="carousel-caption text-end">
+                    <h1 class="display-4">Коллекции</h1>
+                    <p class="lead">С помощью коллекций можно найти что тебе по душе</p>
+                    <a class="btn btn-dark btn-lg" href="{% url 'collections' %}">Искать</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>
+</div>
+
+<div class="container">
+    <!-- Популярные картины -->
+        <section class="my-5 pt-4 border-top">
+        <h2 class="mb-4">
+            <a href="{% url 'popular' %}"
+               class="text-dark text-decoration-none d-flex justify-content-between align-items-center gap-2 section-link">
+                <span>Популярное</span>
+                <i class="bi bi-arrow-right-short fs-2"></i>  <!-- Изменено -->
+            </a>
+        </h2>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for artwork in popular_artworks|slice:":4" %}
+            <div class="col">
+                {% include 'rawApp/_artwork_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Новые картины -->
+    <section class="my-5 pt-4 border-top">
+        <h2 class="mb-4">
+            <a href="{% url 'new' %}"
+               class="text-dark text-decoration-none d-flex justify-content-between align-items-center gap-2 section-link">
+                <span>Новое</span>
+                <i class="bi bi-arrow-right-short fs-2"></i>  <!-- Изменено -->
+            </a>
+        </h2>
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for artwork in new_artworks|slice:":4" %}
+            <div class="col">
+                {% include 'rawApp/_artwork_card.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Коллекции -->
+    <section class="my-5 pt-4 border-top">
+        <h2 class="mb-4">
+            <a href="{% url 'collections' %}"
+               class="text-dark text-decoration-none d-flex justify-content-between align-items-center gap-2 section-link">
+                <span>Коллекции</span>
+                <i class="bi bi-arrow-right-short fs-2"></i>  <!-- Изменено -->
+            </a>
+        </h2>
+        <div class="row g-3">
+            {% for category in categories %}
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="{% url 'category' category.pk %}"
+                   class="btn btn-outline-dark w-100 d-flex justify-content-between align-items-center">
+                    <span>{{ category.name }}</span>
+                    <i class="bi bi-arrow-right-short"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

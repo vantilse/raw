@@ -1,0 +1,93 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-dark text-white py-3">
+                    <h3 class="mb-0 text-center">Создать профиль художника</h3>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Поле даты рождения -->
+                        <div class="mb-4">
+                            <label for="birth_date" class="form-label text-dark">Дата рождения</label>
+                            <input type="date"
+                                   class="form-control form-control-lg"
+                                   id="birth_date"
+                                   name="birth_date"
+                                   required
+                                   pattern="\d{4}-\d{2}-\d{2}"
+                                   placeholder="ГГГГ-ММ-ДД">
+                            <div class="form-text text-muted">
+                                Формат: ГГГГ-ММ-ДД (Пример: 1990-01-31)
+                            </div>
+                        </div>
+
+                        <!-- Поле биографии -->
+                        <div class="mb-4">
+                            <label for="bio" class="form-label text-dark">Биография</label>
+                            <textarea class="form-control form-control-lg"
+                                      id="bio"
+                                      name="bio"
+                                      rows="4"
+                                      required></textarea>
+                            <div class="form-text text-muted">
+                                Расскажите о своем творчестве и опыте
+                            </div>
+                        </div>
+
+                        <!-- Поле аватара -->
+                        <div class="mb-4">
+                            <label for="avatar" class="form-label text-dark">Аватар</label>
+                            <input type="file"
+                                   class="form-control form-control-lg"
+                                   id="avatar"
+                                   name="avatar"
+                                   accept="image/*">
+                            <div class="form-text text-muted">
+                                Загрузите изображение профиля (рекомендуемый размер 500x500px)
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-dark btn-lg py-2">
+                                Создать профиль
+                            </button>
+                            <a href="{% url 'profile' %}" class="btn btn-outline-dark btn-lg py-2">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Дополнительный скрипт для валидации даты -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dateField = document.getElementById('birth_date');
+
+    // Проверка формата при вводе
+    dateField.addEventListener('input', function(e) {
+        const pattern = /^\d{4}-\d{2}-\d{2}$/;
+        if (!pattern.test(e.target.value)) {
+            e.target.setCustomValidity('Пожалуйста, используйте формат ГГГГ-ММ-ДД');
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+});
+</script>
+
+{% endblock %}

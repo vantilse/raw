@@ -1,0 +1,5 @@
+{% for artist in artists %}
+  <!-- Оба варианта работают -->
+  <p>Логин 1: {{ artist.user.username }}</p>
+  <p>Логин 2: {{ artist.username }}</p> 
+{% endfor %}

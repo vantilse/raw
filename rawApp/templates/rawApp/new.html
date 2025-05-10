@@ -1,0 +1,12 @@
+{% extends 'rawApp/base.html' %}
+
+{% block content %}
+<section class="my-5">
+    <h2>Новые работы</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for artwork in new_artworks %}
+            {% include 'rawApp/_artwork_card.html' %}
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

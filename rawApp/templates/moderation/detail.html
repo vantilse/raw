@@ -1,0 +1,145 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div class="container py-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-dark text-white">
+            <h3 class="mb-0">Модерация работы</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <!-- Левая колонка с изображением -->
+                <div class="col-md-6 mb-4">
+                    <div class="preview-container">
+                        {% if artwork.image %}
+                            <img src="{{ artwork.image.url }}"
+                                 class="img-fluid rounded"
+                                 alt="{{ artwork.title }}">
+                        {% else %}
+                            <div class="no-image bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                                <span class="text-muted">Изображение отсутствует</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Правая колонка с информацией -->
+                <div class="col-md-6">
+                    <div class="mb-4">
+                        <h4 class="text-dark">{{ artwork.title }}</h4>
+
+                        <div class="artwork-info">
+                            <div class="info-item">
+                                <span class="info-label">Художник:</span>
+                                <span>
+                                    {% if artwork.artist %}
+                                        {{ artwork.artist.name }}
+                                    {% else %}
+                                        Не указан
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Автор публикации:</span>
+                                <span>
+                                    {{ artwork.author.get_full_name|default:artwork.author.username }}
+                                </span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Категории:</span>
+                                <div class="categories-list">
+                                    {% for category in artwork.categories.all %}
+                                    <span class="badge bg-secondary me-1">
+                                        {{ category.name }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="text-dark">Описание</h5>
+                        <div class="description-box bg-light p-3 rounded">
+                            {{ artwork.description|linebreaks }}
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="moderation-controls">
+                            <div class="mb-3">
+                                <label class="form-label">Статус модерации</label>
+                                <select name="status" class="form-select form-select-lg">
+                                    <option value="approved" {% if artwork.status == 'approved' %}selected{% endif %}>
+                                        Одобрить
+                                    </option>
+                                    <option value="rejected" {% if artwork.status == 'rejected' %}selected{% endif %}>
+                                        Отклонить
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    <i class="bi bi-save me-2"></i>
+                                    Сохранить изменения
+                                </button>
+                                <a href="{% url 'moderation_list' %}" class="btn btn-outline-dark btn-lg">
+                                    Вернуться к списку
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .preview-container {
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .artwork-info {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 0.8rem;
+    }
+
+    .info-label {
+        font-weight: 600;
+        min-width: 140px;
+        color: #495057;
+    }
+
+    .description-box {
+        min-height: 150px;
+        border: 1px solid #dee2e6;
+    }
+
+    .categories-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+</style>
+
+{% endblock %}

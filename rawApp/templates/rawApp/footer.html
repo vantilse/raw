@@ -1,0 +1,61 @@
+{% load static %}
+<footer class="bg-light text-dark border-top">
+    <div class="container py-5">
+        <div class="row g-4">
+            <!-- Колонка "О проекте" -->
+            <div class="col-md-4">
+                <a href="{% url 'home' %}" class="navbar-brand me-4 d-block mb-3">
+                    <img src="{% static 'rawApp/images/.raw-dark.png' %}"
+                         alt="Логотип .raw"
+                         height="17">
+                </a>
+                <p class="text-muted mb-0">
+                    Платформа для современных художников и дизайнеров
+                </p>
+            </div>
+
+            <!-- Колонка "Контакты" -->
+            <div class="col-md-4">
+                <h5 class="mb-3 text-uppercase fw-bold text-dark">Контакты</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="mailto:info@raw.com" class="text-dark text-decoration-none">
+                            <i class="bi bi-envelope me-2"></i>info@raw.com
+                        </a>
+                    </li>
+                    <li>
+                        <a href="tel:+79991234567" class="text-dark text-decoration-none">
+                            <i class="bi bi-phone me-2"></i>+7 (000) 000-00-00
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Колонка "Соцсети" -->
+            <div class="col-md-4">
+                <h5 class="mb-3 text-uppercase fw-bold text-dark">Мы в соцсетях</h5>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-decoration-none">
+                        <i class="bi bi-instagram text-dark fs-5"></i>
+                    </a>
+                    <a href="http://t.me/observantilse" class="text-decoration-none">
+                        <i class="bi bi-telegram text-dark fs-5"></i>
+                    </a>
+                    <a href="#" class="text-decoration-none">
+                        <i class="bi bi-behance text-dark fs-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Копирайт -->
+        <div class="border-top mt-4 pt-4 text-center">
+            <small class="text-muted">
+                © 2025 .raw. Все права защищены.<br>
+                <a href="#" class="text-muted text-decoration-none">Политика конфиденциальности</a> |
+                <a>(Сайт написан в соло)</a> |
+                <a href="#" class="text-muted text-decoration-none">Условия использования</a>
+            </small>
+        </div>
+    </div>
+</footer>

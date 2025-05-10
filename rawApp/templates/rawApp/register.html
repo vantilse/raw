@@ -1,0 +1,147 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'rawApp/css/auth.css' %}">
+
+<style>
+    /* Добавьте в CSS */
+    .invalid-feedback {
+        display: none;
+        color: #dc3545;
+        font-size: 0.875em;
+        margin-top: 0.25rem;
+    }
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+    .is-valid {
+        border-color: #28a745 !important;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-dark text-white py-3">
+                    <h3 class="mb-0 text-center">Создать аккаунт</h3>
+                </div>
+
+                <div class="card-body px-4 py-4">
+
+                    {% if messages %}
+                    <div class="alert-messages">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message|safe }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" id="registrationForm">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="username" class="form-label text-dark">Логин</label>
+                            <input type="text"
+                                   class="form-control form-control-lg"
+                                   id="username"
+                                   name="username"
+                                   required
+                                   autocomplete="username">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="email" class="form-label text-dark">Email</label>
+                            <input type="email"
+                                   class="form-control form-control-lg"
+                                   id="email"
+                                   name="email"
+                                   required
+                                   autocomplete="email"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                            <div class="invalid-feedback" id="emailError">
+                                Пожалуйста, введите корректный email (пример: user@example.com)
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                          <label for="password1" class="form-label text-dark">Пароль</label>
+                          <input type="password"
+                                 class="form-control form-control-lg"
+                                 id="password1"
+                                 name="password1"
+                                 required
+                                 autocomplete="new-password">
+                      </div>
+
+                      <div class="mb-4">
+                          <label for="password2" class="form-label text-dark">Подтверждение пароля</label>
+                          <input type="password"
+                                 class="form-control form-control-lg"
+                                 id="password2"
+                                 name="password2"
+                                 required
+                                 autocomplete="new-password">
+                      </div>
+
+                      <div class="mb-4 form-check">
+                          <input type="checkbox"
+                                 class="form-check-input"
+                                 id="showPasswords">
+                          <label class="form-check-label text-dark" for="showPasswords">Показать пароли</label>
+                      </div>
+
+                        <button type="submit" class="btn btn-dark btn-lg w-100 py-2">Зарегистрироваться</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                      <span class="text-muted">Уже есть аккаунт?</span>
+                      <a href="{% url 'login' %}" class="text-dark text-decoration-none fw-bold">Войти</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Валидация email в реальном времени
+    const emailField = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    emailField.addEventListener('input', function() {
+        if (emailRegex.test(this.value)) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+            emailError.style.display = 'none';
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+            emailError.style.display = 'block';
+        }
+    });
+
+    // Валидация при отправке формы
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        if (!emailRegex.test(emailField.value)) {
+            e.preventDefault();
+            emailField.classList.add('is-invalid');
+            emailError.style.display = 'block';
+            emailField.focus();
+        }
+    });
+
+    // Существующий скрипт для отображения паролей
+    document.getElementById('showPasswords').addEventListener('change', function(e) {
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        const type = e.target.checked ? 'text' : 'password';
+        password1.type = type;
+        password2.type = type;
+    });
+</script>
+{% endblock %}

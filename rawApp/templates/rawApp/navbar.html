@@ -1,0 +1,94 @@
+{% load static %}
+<style>
+    .btn-search:hover .bi-search {
+        color: #0d6efd; /* Цвет при наведении */
+    }
+    .input-group-sm > .form-control,
+    .input-group-sm > .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        border-radius: 0.25rem;
+    }
+
+    .input-group-sm > .btn {
+        border-color: #dee2e6;
+    }
+</style>
+<div class="container">
+  <div class="d-flex flex-wrap align-items-center justify-content-between">
+    <!-- Левая часть -->
+    <div class="d-flex align-items-center">
+      <a href="{% url 'home' %}" class="navbar-brand me-4">
+        <img src="{% static 'rawApp/images/.raw-dark.png' %}"
+             alt="Логотип .raw"
+             height="25">
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a href="{% url 'home' %}" class="nav-link px-2 text-dark">Главная</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-dark"
+             href="#"
+             id="dropdown01"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
+            Категории
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdown01">
+            <li><a class="dropdown-item" href="{% url 'popular' %}">Популярное</a></li>
+            <li><a class="dropdown-item" href="{% url 'new' %}">Новое</a></li>
+            <li><a class="dropdown-item" href="{% url 'collections' %}">Коллекции</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Правая часть -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Поиск -->
+      <form class="d-flex" method="get" action="{% url 'search' %}">
+          <input type="search"
+                 class="form-control form-control-sm"
+                 placeholder="Поиск..."
+                 aria-label="Найти"
+                 name="q"
+                 value="{{ request.GET.q }}">
+           <button type="submit" class="btn btn-outline-secondary border-start-0">
+                <i class="bi bi-search text-dark"></i>
+            </button>
+      </form>
+
+      <!-- Профиль/Авторизация -->
+      {% if user.is_authenticated %}
+      <div class="dropdown">
+        <a href="#"
+           class="d-block link-dark text-decoration-none dropdown-toggle"
+           id="dropdownUser1"
+           data-bs-toggle="dropdown"
+           aria-expanded="false">
+          <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'rawApp/images/default_user.png' %}{% endif %}"
+               alt="profile"
+               width="32"
+               height="32"
+               class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="dropdownUser1">
+          <li><a class="dropdown-item" href="{% url 'add_artwork' %}">Создать статью</a></li>
+          <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">Профиль</a></li>
+          <li><a class="dropdown-item" href="{% url 'settings' %}">Настройки</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="{% url 'logout' %}">Выход</a></li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'login' %}" class="btn btn-outline-dark">Вход</a>
+        <a href="{% url 'register' %}" class="btn btn-dark">Регистрация</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

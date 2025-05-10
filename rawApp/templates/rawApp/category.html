@@ -1,0 +1,52 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Работы в категории: {{ category.name }}</h1>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for artwork in artworks %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <a href="{% url 'artwork_detail' artwork.id %}">
+                    <img src="{{ artwork.image.url }}" 
+                         class="card-img-top" 
+                         alt="{{ artwork.title }}"
+                         style="height: 250px; object-fit: cover;">
+                </a>
+                
+                <div class="card-body">
+                    <h5 class="card-title">{{ artwork.title }}</h5>
+                    <p class="card-text">{{ artwork.description|truncatechars:100 }}</p>
+                    
+                    <!-- Блок с категориями -->
+                    <div class="mt-2">
+                        {% for cat in artwork.categories.all %}
+                        <span class="badge bg-secondary me-1 mb-1">
+                            {{ cat.name }}
+                        </span>
+                        {% empty %}
+                        <span class="text-muted">Нет категорий</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white">
+                    <small class="text-muted">
+                        <i class="bi bi-eye"></i> {{ artwork.views }} | 
+                        <i class="bi bi-heart"></i> {{ artwork.likes.count }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                В этой категории пока нет работ
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

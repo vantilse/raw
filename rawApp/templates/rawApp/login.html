@@ -1,0 +1,68 @@
+{% extends 'rawApp/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-dark text-white py-3">
+                    <h3 class="mb-0 text-center">Войти в аккаунт</h3>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="username" class="form-label text-dark">Логин или Email</label>
+                            <input type="text"
+                                   class="form-control form-control-lg"
+                                   id="username"
+                                   name="username"
+                                   required
+                                   autocomplete="username">
+                            <div class="form-text text-muted">
+                                Введите ваш логин или адрес электронной почты
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password" class="form-label text-dark">Пароль</label>
+                            <input type="password"
+                                   class="form-control form-control-lg"
+                                   id="password"
+                                   name="password"
+                                   required
+                                   autocomplete="current-password">
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   id="showPassword">
+                            <label class="form-check-label text-dark" for="showPassword">Показать пароль</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark btn-lg w-100 py-2">Войти</button>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <span class="text-muted">Нет аккаунта?</span>
+                        <a href="{% url 'register' %}" class="text-dark text-decoration-none fw-bold">Зарегистрироваться</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('showPassword').addEventListener('change', function(e) {
+        const passwordField = document.getElementById('password');
+        passwordField.type = e.target.checked ? 'text' : 'password';
+    });
+</script>
+{% endblock %}
