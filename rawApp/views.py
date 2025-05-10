@@ -97,7 +97,6 @@ def add_artwork(request):
                 artwork.author = request.user
                 artwork.status = 'pending'
 
-                # Обработка художника
                 new_artist = request.POST.get('new_artist', '').strip()
                 if new_artist:
                     artist, created = Artist.objects.get_or_create(
@@ -106,13 +105,10 @@ def add_artwork(request):
                     )
                     artwork.artist = artist
 
-                # Сохраняем сначала основной объект
-                artwork.save()  # <-- Важное исправление!
+                artwork.save()
 
-                # Затем обрабатываем ManyToMany
                 form.save_m2m()
 
-                # Обработка категорий
                 new_cats = request.POST.get('new_categories', '')
                 if new_cats:
                     for cat in new_cats.split(','):
@@ -144,26 +140,14 @@ def submission_success(request):
 @login_required
 def profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    profile = get_object_or_404(Profile, user=user)  # Проверяем наличие профиля
+    profile = get_object_or_404(Profile, user=user) 
     artworks = Artwork.objects.filter(author=user, is_approved=True)
 
     return render(request, 'rawApp/profile.html', {
         'profile': profile,
         'artworks': artworks
     })
- # try:
-   #     profile = request.user.profile
-    # except Profile.DoesNotExist:
-      #  profile = Profile.objects.create(user=request.user)
-       # Profile.objects.create(user=request.user)
-        #return redirect('profile')
 
-   # user_artworks = Artwork.objects.filter(author=request.user, is_approved=True)
-
-   # return render(request, 'rawApp/profile.html', {
- #       'profile': profile,
-  #      'artworks': user_artworks
-   # })
 
 @login_required
 def my_profile(request):
@@ -172,7 +156,7 @@ def my_profile(request):
     except Profile.DoesNotExist:
 
         Profile.objects.create(user=request.user)
-        return redirect('my_profile')  # Используйте имя вашего URL
+        return redirect('my_profile')
 
     user_artworks = Artwork.objects.filter(author=request.user, is_approved=True)
 
@@ -190,7 +174,7 @@ def edit_profile(request):
         if form.is_valid():
             if form.cleaned_data.get('delete_avatar'):
                 if profile.avatar:
-                    profile.avatar.delete(save=False)  # Удаляем файл
+                    profile.avatar.delete(save=False) 
                     profile.avatar = None
             form.save()
             messages.success(request, 'Профиль успешно обновлен!')
@@ -203,7 +187,7 @@ def edit_profile(request):
 
 def register(request):
 
-    print("Register view called")  # Добавьте это
+    print("Register view called") 
     if request.method == 'POST':
         print("POST data:", request.POST)
 
@@ -216,16 +200,9 @@ def register(request):
 
         if user_form.is_valid() and artist_form.is_valid():
             try:
-                # Сохраняем пользователя
                 user = user_form.save()
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
 
-                # Создаем профиль художника
-                #artist = artist_form.save(commit=False)
-                #artist.user = user
-                #artist.save()
-
-                # Авторизуем пользователя
                 login(request, user)
                 messages.success(request, 'Регистрация прошла успешно!')
                 return redirect('home')
@@ -233,7 +210,6 @@ def register(request):
             except Exception as e:
                 messages.error(request, f'Ошибка при сохранении: {str(e)}')
         else:
-            # Собираем все ошибки форм
             errors = []
             for field, error_list in user_form.errors.items():
                 errors.append(f"{user_form[field].label}: {', '.join(error_list)}")
@@ -272,7 +248,6 @@ def search(request):
     if not query:
         return redirect('home')
 
-    # Поиск по нескольким полям с аннотацией релевантности
     results = Artwork.objects.filter(
         Q(title__icontains=query) |
         Q(description__icontains=query) |
@@ -312,21 +287,6 @@ def collections(request):
     return render(request, 'rawApp/collections.html', {
         'categories': categories
     })
-
-
-#@login_required
-# def create_artist_profile(request):
- #   if request.method == 'POST':
-  #      form = ArtistProfileForm(request.POST)
-   #     if form.is_valid():
-    #        artist = form.save(commit=False)
-     #       artist.user = request.user
-      #      artist.save()
-       #     return redirect('home')
-    #else:
-     #   form = ArtistProfileForm()
-    #return render(request, 'rawApp/create_artist.html', {'form': form})
-
 
 def submission_success(request):
     return render(request, 'rawApp/submission_success.html')
