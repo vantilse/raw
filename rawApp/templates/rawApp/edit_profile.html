@@ -86,7 +86,7 @@
         <input type="hidden" id="delete_avatar_flag" name="delete_avatar" value="">
 
         <div class="row g-4">
-            <!-- Левая колонка с аватаром -->
+            <!-- Левая колонка -->
             <div class="col-md-4">
                 <div class="d-flex flex-column align-items-center">
                      <div class="avatar-upload-section text-center w-100">
@@ -103,7 +103,6 @@
                             {% endif %}
                         </div>
 
-                        <!-- Поле загрузки файла -->
                         <div class="input-group w-100 mb-3">
                             <label class="form-label w-100">
                                 Новый аватар
@@ -115,7 +114,6 @@
                             </label>
                         </div>
 
-                        <!-- Кнопка удаления -->
                         {% if form.instance.avatar %}
                         <button type="button"
                                 class="btn btn-outline-danger delete-avatar-btn"
@@ -126,12 +124,11 @@
                 </div>
             </div>
 
-            <!-- Правая колонка с формой -->
+            <!-- Правая колонка -->
             <div class="col-md-8">
                 <div class="form-section">
                     <h1 class="form-header">Редактирование профиля</h1>
 
-                    <!-- Имя и Фамилия -->
                     <div class="name-fields mb-4">
                         <div>
                             <label for="id_first_name" class="form-label">Имя</label>
@@ -154,13 +151,11 @@
                         </div>
                     </div>
 
-                    <!-- Поле "О себе" -->
                     <div class="mb-4">
                         <label for="id_bio" class="form-label">О себе</label>
                         {{ form.bio }}
                     </div>
 
-                    <!-- Кнопки -->
                     <div class="d-flex gap-3">
                         <button type="submit" class="btn btn-dark btn-save">
                             <i class="bi bi-save me-2"></i>
@@ -195,7 +190,6 @@
 </div>
 
 <script>
-      // Скрипт для предпросмотра аватара
     document.getElementById('id_avatar').addEventListener('change', function(e) {
         const preview = document.getElementById('avatar-preview');
         const file = e.target.files[0];
@@ -209,7 +203,6 @@
         }
     });
 
-    // Функции для работы с модальным окном
     function showConfirmation() {
         document.getElementById('confirmationModal').style.display = 'block';
     }
@@ -219,14 +212,11 @@
     }
 
     function confirmDelete() {
-        // Устанавливаем флаг удаления
         document.getElementById('delete_avatar_flag').value = 'true';
 
-        // Меняем превью на дефолтное
         const preview = document.getElementById('avatar-preview');
         preview.src = "{% static 'images/default_user.png' %}";
 
-        // Скрываем кнопку удаления
         document.querySelector('.delete-avatar-btn').style.display = 'none';
 
         hideConfirmation();
