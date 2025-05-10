@@ -220,7 +220,6 @@
 </style>
 
 <script>
-    // Предпросмотр изображения
     document.getElementById('image').addEventListener('change', function(e) {
         const preview = document.getElementById('image-preview');
         const placeholder = document.getElementById('preview-placeholder');
@@ -241,7 +240,6 @@
         }
     });
 
-    // Обработка категорий
         document.addEventListener('DOMContentLoaded', function() {
             const categoriesInput = document.getElementById('new-categories-input');
             const addCategoriesBtn = document.getElementById('add-categories');
@@ -250,7 +248,6 @@
             const officialCategoriesSelect = document.getElementById('id_categories');
             let categoriesList = [];
 
-            // Добавление новых категорий
             addCategoriesBtn.addEventListener('click', function() {
                 const categories = categoriesInput.value.trim();
                 if (categories) {
@@ -275,7 +272,6 @@
                 }
             });
 
-            // Удаление категорий
             selectedCategories.addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-category')) {
                     const category = e.target.getAttribute('data-category');
@@ -285,13 +281,11 @@
                 }
             });
 
-            // Проверка формы перед отправкой
             document.getElementById('artwork-form').addEventListener('submit', function(e) {
                 const submitBtn = document.getElementById('submit-btn');
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Отправка...';
 
-                // Убедимся, что хотя бы одна категория выбрана
                 if (officialCategoriesSelect.selectedOptions.length === 0 && newCategoriesField.value.trim() === '') {
                     e.preventDefault();
                     submitBtn.disabled = false;
