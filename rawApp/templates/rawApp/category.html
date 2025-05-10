@@ -19,8 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ artwork.title }}</h5>
                     <p class="card-text">{{ artwork.description|truncatechars:100 }}</p>
-                    
-                    <!-- Блок с категориями -->
+ 
                     <div class="mt-2">
                         {% for cat in artwork.categories.all %}
                         <span class="badge bg-secondary me-1 mb-1">
